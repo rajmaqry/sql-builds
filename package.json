@@ -1,10 +1,13 @@
 {
   "dependencies": {
+    "@ant-design/icons": "4.7.0",
+    "@ant-design/icons-svg": "4.2.1",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "5.5.1",
     "@mui/material": "latest",
     "@types/node": "17.0.23",
+    "antd": "4.19.5",
     "fs": "0.0.1-security",
     "react": "latest",
     "react-dom": "latest"
