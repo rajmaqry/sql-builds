@@ -96,10 +96,9 @@ export default function BasicCard() {
               </MenuItem>
             ))}
           </TextField>
-          {remTableIng.length > 0 &&
-            Array.from(Array(remTableIng)).map((c, index) => {
-              return <>{remTableIng[index]}</>;
-            })}
+
+          {remTableIng[0]}
+
           {toAdd && (
             <>
               <span />
