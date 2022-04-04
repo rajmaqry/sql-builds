@@ -19,32 +19,55 @@ const bull = (
     •
   </Box>
 );
+let tables: string[] = [];
 export default function BasicCard() {
   let points: ITableMap = JSON.parse(
     fs.readFileSync("../../smpl.json", "utf8")
   );
   let remPoints: ITableMap = points;
   const [tableName, setTableName] = React.useState("");
-  let tables: string[] = [];
-
+  const remTableIng = [];
   const handleTableSelect = (e) => {
     setTableName(e.target.value);
   };
   const tableSelect = (e) => {
     tables.push(e.target.id);
-    console.log(tables);
+  };
+  const renderOtherTables = (props) => {
+    return (
+      <div>
+        <TextField
+          id={tableName}
+          select
+          label="Select"
+          value={tableName}
+          onChange={handleTableSelect}
+          helperText=""
+        >
+          {Object.keys(remPoints).map((p) => (
+            <MenuItem
+              id={points[p].table_key}
+              value={points[p].table_name}
+              onClick={tableSelect}
+            >
+              {points[p].table_name}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
+    );
   };
   const showOption = () => {
-    console.log(tables);
     for (let i = 0, len = tables.length; i < len; i++) {
       console.log(tables[i]);
       delete remPoints[tables[i]];
     }
-    console.log(remPoints);
+    remTableIng.push(renderOtherTables(remTableIng));
+    console.log(remTableIng);
   };
 
   const renderTables = () => {
-    const toAdd = tables.length == Object.keys(points).length ? false : true;
+    const toAdd = tables?.length == Object.keys(points).length ? false : true;
     return (
       <Box
         component="form"
@@ -73,6 +96,10 @@ export default function BasicCard() {
               </MenuItem>
             ))}
           </TextField>
+          {remTableIng.length > 0 &&
+            Array.from(Array(remTableIng)).map((c, index) => {
+              return <>{remTableIng[index]}</>;
+            })}
           {toAdd && (
             <>
               <span />
