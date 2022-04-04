@@ -4,6 +4,8 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "5.5.1",
     "@mui/material": "latest",
+    "@types/node": "17.0.23",
+    "fs": "0.0.1-security",
     "react": "latest",
     "react-dom": "latest"
   },

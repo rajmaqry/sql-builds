@@ -10,7 +10,6 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import * as fs from "fs";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import IconButton from "@mui/material/IconButton";
 
 const bull = (
   <Box
@@ -21,20 +20,24 @@ const bull = (
   </Box>
 );
 export default function BasicCard() {
-  let points: ITableMap = JSON.parse(fs.readFileSync("./sample.json", "utf8"));
+  let points: ITableMap = JSON.parse(
+    fs.readFileSync("../../smpl.json", "utf8")
+  );
   let remPoints: ITableMap = points;
   const [tableName, setTableName] = React.useState("");
-  const tables: string[] = [];
+  let tables: string[] = [];
 
   const handleTableSelect = (e) => {
     setTableName(e.target.value);
   };
   const tableSelect = (e) => {
     tables.push(e.target.id);
+    console.log(tables);
   };
   const showOption = () => {
     console.log(tables);
     for (let i = 0, len = tables.length; i < len; i++) {
+      console.log(tables[i]);
       delete remPoints[tables[i]];
     }
     console.log(remPoints);
