@@ -15,7 +15,8 @@ import Divider from "@mui/material/Divider";
 import "./sample.scss";
 import CustomizedInput from "./input";
 import Grid from "@mui/material/Grid";
-
+import ListDividers from "./lists";
+import Modal from "@mui/material/Modal";
 const bull = (
   <Box
     component="span"
@@ -24,11 +25,31 @@ const bull = (
     •
   </Box>
 );
+const tableModalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "800px",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4
+};
 let tables: string[] = [];
+let tables_items = ["abc", "ccs", "asas"];
 export default function BasicCard() {
   let points: ITableMap = JSON.parse(
     fs.readFileSync("../../smpl.json", "utf8")
   );
+  const [openTableModal, setOpenTableModal] = React.useState(false);
+  const handleTableModalClose = () => {
+    setOpenTableModal(false);
+  };
+  const renderTableSelection = () => {
+    setOpenTableModal(true);
+  };
+
   let remPoints: ITableMap = points;
   const [tableName, setTableName] = React.useState("");
   const remTableIng = [];
@@ -152,10 +173,21 @@ export default function BasicCard() {
           <div class="row">
             <div class="row-1">
               <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  xs=8
+                <Grid item xs={4} sx={{ paddingTop: "1px !important" }}>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    color="text.secondary"
+                  >
+                    Tables{" "}
+                  </Typography>
+                  <ListDividers items={tables_items} />
+                  <Button variant="contained" onClick={renderTableSelection}>
+                    + Add Table
+                  </Button>
                 </Grid>
-                <Grid item xs={8}>
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={7}>
                   xs=4
                 </Grid>
               </Grid>
@@ -163,6 +195,32 @@ export default function BasicCard() {
           </div>
         </Paper>
       </Box>
+
+      <Modal
+        open={openTableModal}
+        onClose={handleTableModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={tableModalStyle}>
+          <Grid container spacing={2}>
+            <Grid item xs={4} sx={{ paddingTop: "1px !important" }}>
+              <Typography variant="h6" component="div" color="text.secondary">
+                Select Database
+              </Typography>
+              <ListDividers items={tables_items} />
+              <Button variant="contained" onClick={renderTableSelection}>
+                + Add Table
+              </Button>
+            </Grid>
+            <Divider orientation="vertical" flexItem />
+            <Grid item xs={7}>
+              xs=4
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
+
       <Card sx={{ minWidth: 100 }}>
         <CardContent>
           <Typography variant="h5" component="div" color="text.secondary">
