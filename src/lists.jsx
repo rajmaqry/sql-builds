@@ -7,7 +7,7 @@ import { withStyles } from "@mui/styles";
 const style = {
   width: "100%"
 };
-const ListItem = withStyles({
+export const ListItem = withStyles({
   root: {
     "&$selected": {
       backgroundColor: "red",
@@ -24,7 +24,37 @@ const ListItem = withStyles({
       }
     },
     "&:hover": {
+      "border-radius": "4px",
+      "border-left": "4px solid rgb(240, 103, 103)",
       backgroundColor: "blue",
+      color: "white",
+      "& .MuiListItemIcon-root": {
+        color: "white"
+      }
+    }
+  },
+  selected: {}
+})(MuiListItem);
+export const LighterListItem = withStyles({
+  root: {
+    "&$selected": {
+      backgroundColor: "red",
+      color: "#0097a7",
+      "& .MuiListItemIcon-root": {
+        color: "white"
+      }
+    },
+    "&$selected:hover": {
+      backgroundColor: "#00bcd4",
+      color: "white",
+      "& .MuiListItemIcon-root": {
+        color: "white"
+      }
+    },
+    "&:hover": {
+      "border-radius": "4px",
+      "border-left": "4px solid rgb(240, 103, 103)",
+      backgroundColor: "#4dd0e1",
       color: "white",
       "& .MuiListItemIcon-root": {
         color: "white"
@@ -43,6 +73,7 @@ export default function ListDividers(props) {
         props.items.map((item, index) => (
           <>
             <ListItem
+              key={item}
               button
               style={
                 ({ "&:hover": { "border-radius": "5px", border: "1px" } },
@@ -50,6 +81,7 @@ export default function ListDividers(props) {
                   ? { background: "#b2dfdb" }
                   : { background: "#80cbc4" })
               }
+              onClick={props.onClick}
             >
               {item}
             </ListItem>

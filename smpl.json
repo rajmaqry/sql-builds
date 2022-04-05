@@ -98,5 +98,105 @@
         "values": ["YUT", "UUI", "SSIA", "ATR"]
       }
     ]
+  },
+  "9a99988a-0123-4456-b89a567-b1607f326fd8": {
+    "table_key": "9a99988a-0123-4456-b89a567-b1607f326fd8",
+    "table_name": "consumer_consumptions_01",
+    "ingestion_id": "9a99988a-0123-4456-b89a567-b1607f32688sy",
+    "database_name": "demo_db_01",
+    "description": "consumer add consumptions",
+    "columns": [
+      {
+        "column_name": "_c0",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c1",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c3",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c4",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c5",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c6",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c7",
+        "column_type": "number"
+      },
+      {
+        "column_name": "_c8",
+        "column_type": "number"
+      },
+      {
+        "column_name": "_c9",
+        "column_type": "boolean"
+      },
+      {
+        "column_name": "_c10",
+        "column_type": "string",
+        "values": ["YUT", "UUI", "SSIA", "ATR"]
+      }
+    ]
+  },
+  "9a99988a-0123ert4-4456-b89a567-b1607f326fd8": {
+    "table_key": "9a99988a-0123ert4-4456-b89a567-b1607f326fd8",
+    "table_name": "consumer_consumptions_01",
+    "ingestion_id": "9a99988a-0123ert4-4456-b89a-b1607f32688sy",
+    "database_name": "demo_db_01",
+    "description": "consumer add consumptions",
+    "columns": [
+      {
+        "column_name": "_c0",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c1",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c3",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c4",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c5",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c6",
+        "column_type": "string"
+      },
+      {
+        "column_name": "_c7",
+        "column_type": "number"
+      },
+      {
+        "column_name": "_c8",
+        "column_type": "number"
+      },
+      {
+        "column_name": "_c9",
+        "column_type": "boolean"
+      },
+      {
+        "column_name": "_c10",
+        "column_type": "string",
+        "values": ["YUT", "UUI", "SSIA", "ATR"]
+      }
+    ]
   }
 }

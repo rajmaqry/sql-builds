@@ -17,14 +17,12 @@ import CustomizedInput from "./input";
 import Grid from "@mui/material/Grid";
 import ListDividers from "./lists";
 import Modal from "@mui/material/Modal";
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
+import StorageIcon from "@mui/icons-material/Storage";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import MuiListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+import { LighterListItem } from "./lists";
 const tableModalStyle = {
   position: "absolute",
   top: "50%",
@@ -38,6 +36,7 @@ const tableModalStyle = {
 };
 let tables: string[] = [];
 let tables_items = ["abc", "ccs", "asas"];
+let databaseListItem = [];
 export default function BasicCard() {
   let points: ITableMap = JSON.parse(
     fs.readFileSync("../../smpl.json", "utf8")
@@ -48,6 +47,110 @@ export default function BasicCard() {
   };
   const renderTableSelection = () => {
     setOpenTableModal(true);
+  };
+  const [selectedDatabase, setSelectedDatabase] = React.useState<string>();
+  const [databaseTableMap, setDatabaseTableMap] = React.useState<{
+    [dbName: string]: string[];
+  }>({});
+  const handleSelectDatabase = (e) => {
+    const dbName = e.target.id;
+    if (dbName.length === 0) return;
+    setSelectedDatabase(dbName);
+  };
+  const buildDBItem = (dbName) => {
+    return (
+      <>
+        <MuiListItem
+          id={dbName}
+          sx={{
+            paddingBottom: "0px !important",
+            paddingLeft: "0px !important",
+            paddingRight: "0px !important",
+            paddingTop: "0px !important"
+          }}
+        >
+          <ListItemIcon id={dbName}>
+            <StorageIcon id={dbName} />
+          </ListItemIcon>
+          <ListItemText id={dbName}>
+            <Typography
+              variant="h7"
+              component="div"
+              color="#0097a7"
+              id={dbName}
+              sx={{ width: "100%" }}
+            >
+              {dbName}
+            </Typography>
+          </ListItemText>
+        </MuiListItem>
+      </>
+    );
+  };
+  React.useEffect(() => {
+    if (!points) return;
+    const newDatabaseTableMap: { [dbName: string]: string[] } = {};
+    for (const table_key in points) {
+      const dbName = points[table_key].database_name;
+      const tableName = points[table_key].table_name;
+      if (!(dbName in newDatabaseTableMap)) {
+        newDatabaseTableMap[dbName] = [];
+        databaseListItem.push(buildDBItem(dbName));
+      }
+      newDatabaseTableMap[dbName].push(tableName);
+    }
+    setDatabaseTableMap(newDatabaseTableMap);
+  }, []);
+
+  const renderTables = () => {
+    const tables = databaseTableMap[selectedDatabase];
+    return (
+      <List sx={{ width: "100%" }} component="nav" aria-label="mailbox folders">
+        <Divider />
+        {tables?.length > 0 &&
+          tables.map((table, index) => (
+            <>
+              <LighterListItem
+                id={table}
+                button
+                style={
+                  index % 2
+                    ? { background: "#b2ebf2" }
+                    : { background: "#e0f7fa" }
+                }
+                onClick={selectTable}
+              >
+                <ListItemIcon>
+                  <StorageIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Typography
+                    variant="h7"
+                    component="div"
+                    color="#0097a7"
+                    sx={{ width: "100%" }}
+                  >
+                    {table}
+                  </Typography>
+                </ListItemText>
+              </LighterListItem>
+              <Divider />
+            </>
+          ))}
+        {tables?.length === 0 && (
+          <>
+            <Divider />
+            <LighterListItem button>
+              <ListItemText
+                sx={{ "align-items": "center", "text-align": "center" }}
+                primary="( Empty )"
+              />
+            </LighterListItem>
+            <Divider />
+          </>
+        )}
+      </List>
+    );
   };
 
   let remPoints: ITableMap = points;
@@ -92,7 +195,7 @@ export default function BasicCard() {
     console.log(remTableIng);
   };
 
-  const renderTables = () => {
+  const renderTables1 = () => {
     const toAdd = tables?.length == Object.keys(points).length ? false : true;
     return (
       <Box
@@ -173,7 +276,14 @@ export default function BasicCard() {
           <div class="row">
             <div class="row-1">
               <Grid container spacing={2}>
-                <Grid item xs={4} sx={{ paddingTop: "1px !important" }}>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{
+                    paddingTop: "1px !important",
+                    paddingRight: "4px !important"
+                  }}
+                >
                   <Typography
                     variant="h6"
                     component="div"
@@ -186,8 +296,9 @@ export default function BasicCard() {
                     + Add Table
                   </Button>
                 </Grid>
+
                 <Divider orientation="vertical" flexItem />
-                <Grid item xs={7}>
+                <Grid item xs={6}>
                   xs=4
                 </Grid>
               </Grid>
@@ -203,18 +314,26 @@ export default function BasicCard() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={tableModalStyle}>
-          <Grid container spacing={2}>
-            <Grid item xs={4} sx={{ paddingTop: "1px !important" }}>
-              <Typography variant="h6" component="div" color="text.secondary">
-                Select Database
-              </Typography>
-              <ListDividers items={tables_items} />
-              <Button variant="contained" onClick={renderTableSelection}>
-                + Add Table
-              </Button>
+          <Typography variant="h6" component="div" color="text.secondary">
+            Select Database
+          </Typography>
+          <Grid container spacing={2} sx={{ paddingTop: "5px !important" }}>
+            <Grid
+              item
+              xs={4}
+              sx={{
+                paddingTop: "5px !important",
+                paddingRight: "4px !important"
+              }}
+            >
+              <ListDividers
+                items={databaseListItem}
+                onClick={handleSelectDatabase}
+              />
             </Grid>
             <Divider orientation="vertical" flexItem />
             <Grid item xs={7}>
+              {selectedDatabase?.length > 0 && <p>{renderTables()}</p>}
               xs=4
             </Grid>
           </Grid>
