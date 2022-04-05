@@ -20,7 +20,7 @@ export const ListItem = withStyles({
       backgroundColor: "purple",
       color: "white",
       "& .MuiListItemIcon-root": {
-        color: "white"
+        color: "#00bcd4 !important"
       }
     },
     "&:hover": {
@@ -29,7 +29,7 @@ export const ListItem = withStyles({
       backgroundColor: "blue",
       color: "white",
       "& .MuiListItemIcon-root": {
-        color: "white"
+        color: "#00bcd4 !important"
       }
     }
   },

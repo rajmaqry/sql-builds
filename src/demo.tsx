@@ -44,7 +44,9 @@ export default function BasicCard() {
   let points: ITableMap = JSON.parse(
     fs.readFileSync("../../smpl.json", "utf8")
   );
-  const [table_selected_index, setTable_selected_index] = React.useState([]);
+  const [table_selected, setTable_selected] = React.useState([]);
+  const [table_name_selected, setTable_name_selected] = React.useState([]);
+  const [table, setTable] = React.useState("");
   const [openTableModal, setOpenTableModal] = React.useState(false);
   const handleTableModalClose = (event, reason) => {
     if (reason && reason == "backdropClick") return;
@@ -62,21 +64,29 @@ export default function BasicCard() {
     if (dbName.length === 0) return;
     setSelectedDatabase(dbName);
   };
-  const selectTable = (e, i) => {
-    if (!(i in table_selected_index)) {
-      setTable_selected_index((init) => [...init, i]);
+  const selectTable = (e, table) => {
+    setTable(selectedDatabase + "." + table);
+  };
+  React.useEffect(() => {
+    if (!table_selected.includes(table) && table !== "") {
+      setTable_selected((init) => [...init, table]);
+      const [dbName, tableName] = table.split(".");
+      setTable_name_selected((init) => [...init, tableName]);
     } else {
-      setTable_selected_index(
-        table_selected_index.filter((item) => item === i)
+      const [dbName, tableName] = table.split(".");
+      setTable_selected(table_selected.filter((item) => item !== table));
+      setTable_name_selected(
+        table_name_selected.filter((item) => item !== tableName)
       );
     }
-    console.log(table_selected_index);
-  };
-  const decideSelected = (index) => {
-    if (index in table_selected_index) {
+  }, [table]);
+  const decideSelected = (table) => {
+    const t = selectedDatabase + "." + table;
+    if (table_selected.includes(t)) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   };
   const buildDBItem = (dbName) => {
     return (
@@ -136,7 +146,7 @@ export default function BasicCard() {
           tables.map((table, index) => (
             <>
               <LighterListItem
-                selected={decideSelected(index)}
+                selected={decideSelected(table)}
                 id={table}
                 button
                 style={
@@ -144,7 +154,7 @@ export default function BasicCard() {
                     ? { background: "#e1f5fe" }
                     : { background: "#b3e5fc" }
                 }
-                onClick={(e) => selectTable(e, index)}
+                onClick={(e) => selectTable(e, table)}
               >
                 <ListItemIcon id={table}>
                   <TableChartIcon id={table} />
@@ -194,88 +204,15 @@ export default function BasicCard() {
   const tableSelect = (e) => {
     tables.push(e.target.id);
   };
-  const renderOtherTables = (props) => {
-    return (
-      <div>
-        <TextField
-          id={tableName}
-          select
-          label="Select"
-          value={tableName}
-          onChange={handleTableSelect}
-          helperText=""
-        >
-          {Object.keys(remPoints).map((p) => (
-            <MenuItem
-              id={points[p].table_key}
-              value={points[p].table_name}
-              onClick={tableSelect}
-            >
-              {points[p].table_name}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
-    );
-  };
+
   const showOption = () => {
     for (let i = 0, len = tables.length; i < len; i++) {
       console.log(tables[i]);
       delete remPoints[tables[i]];
     }
-    remTableIng.push(renderOtherTables(remTableIng));
+    // remTableIng.push(renderOtherTables(remTableIng));
     console.log(remTableIng);
   };
-
-  const renderTables1 = () => {
-    const toAdd = tables?.length == Object.keys(points).length ? false : true;
-    return (
-      <Box
-        component="form"
-        sx={{
-          "& .MuiTextField-root": { marginTop: "10px", width: "25ch" }
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <div>
-          <TextField
-            id={tableName}
-            select
-            label="Select"
-            value={tableName}
-            onChange={handleTableSelect}
-            helperText=""
-          >
-            {Object.keys(points).map((p) => (
-              <MenuItem
-                id={points[p].table_key}
-                value={points[p].table_name}
-                onClick={tableSelect}
-              >
-                {points[p].table_name}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {remTableIng[0]}
-
-          {toAdd && (
-            <>
-              <span />
-              <Button onClick={showOption}>
-                <AddCircleIcon
-                  fontSize="large"
-                  sx={{ marginLeft: "10Px", color: "red" }}
-                />
-              </Button>
-            </>
-          )}
-        </div>
-      </Box>
-    );
-  };
-
   return (
     <>
       <Box
@@ -323,7 +260,7 @@ export default function BasicCard() {
                   >
                     Tables{" "}
                   </Typography>
-                  <ListDividers items={tables_items} />
+                  <ListDividers items={table_name_selected} />
                   <Button variant="contained" onClick={renderTableSelection}>
                     + Add Table
                   </Button>

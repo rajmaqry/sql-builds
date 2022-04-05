@@ -151,7 +151,7 @@
   },
   "9a99988a-0123ert4-4456-b89a567-b1607f326fd8": {
     "table_key": "9a99988a-0123ert4-4456-b89a567-b1607f326fd8",
-    "table_name": "consumer_consumptions_01",
+    "table_name": "consumer_consumptions_02",
     "ingestion_id": "9a99988a-0123ert4-4456-b89a-b1607f32688sy",
     "database_name": "demo_db_01",
     "description": "consumer add consumptions",
