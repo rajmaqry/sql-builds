@@ -10,6 +10,11 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import * as fs from "fs";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import Paper from "@mui/material/Paper";
+import Divider from "@mui/material/Divider";
+import "./sample.scss";
+import CustomizedInput from "./input";
+import Grid from "@mui/material/Grid";
 
 const bull = (
   <Box
@@ -116,23 +121,66 @@ export default function BasicCard() {
   };
 
   return (
-    <Card sx={{ minWidth: 100 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Build your SQL
-        </Typography>
-        <Typography variant="h5" component="div">
-          Pick Ingestions Points : {renderTables()}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary"></Typography>
-        <Typography variant="body2">
-          well meaning and kindly.
-          <br />
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+            width: 1000,
+            height: 1000
+          }
+        }}
+        justifyContent="center"
+      >
+        <Paper elevation={3}>
+          <div class="paper-heading">
+            <Typography variant="h5" component="div" color="#0097a7">
+              SQL Settings
+            </Typography>
+          </div>
+          <Divider variant="middle" />
+          <div class="paper-heading">
+            <CustomizedInput
+              label="SQL Name"
+              onChange={showOption}
+              width="100%"
+            />
+          </div>
+          <Divider variant="middle" sx={{ "padding-top": "40px" }} />
+          <div class="row">
+            <div class="row-1">
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  xs=8
+                </Grid>
+                <Grid item xs={8}>
+                  xs=4
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        </Paper>
+      </Box>
+      <Card sx={{ minWidth: 100 }}>
+        <CardContent>
+          <Typography variant="h5" component="div" color="text.secondary">
+            SQL Settings
+          </Typography>
+          <Typography variant="h5" component="div">
+            Pick Ingestions Points : {renderTables()}
+          </Typography>
+          <Typography sx={{ mb: 1.5 }} color="text.secondary"></Typography>
+          <Typography variant="body2">
+            well meaning and kindly.
+            <br />
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small">Learn More</Button>
+        </CardActions>
+      </Card>
+    </>
   );
 }
