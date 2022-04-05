@@ -49,7 +49,7 @@ export const LighterListItem = withStyles({
       backgroundColor: "#b2ebf2 !important",
       color: "white !important",
       "& .MuiListItemIcon-root": {
-        color: "white"
+        color: "#304ffee"
       }
     },
     "&:hover": {
@@ -58,7 +58,7 @@ export const LighterListItem = withStyles({
       backgroundColor: "#4dd0e1",
       color: "white",
       "& .MuiListItemIcon-root": {
-        color: "white"
+        color: "#00bcd4"
       }
     }
   },
