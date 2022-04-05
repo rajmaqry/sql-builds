@@ -38,7 +38,6 @@ const tableModalStyle = {
   p: 4
 };
 let tables: string[] = [];
-let tables_items = ["abc", "ccs", "asas"];
 let databaseListItem = [];
 export default function BasicCard() {
   let points: ITableMap = JSON.parse(
