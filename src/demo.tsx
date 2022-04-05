@@ -23,6 +23,9 @@ import ListItemText from "@mui/material/ListItemText";
 import MuiListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
 import { LighterListItem } from "./lists";
+import TableChartIcon from "@mui/icons-material/TableChart";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 const tableModalStyle = {
   position: "absolute",
   top: "50%",
@@ -41,8 +44,10 @@ export default function BasicCard() {
   let points: ITableMap = JSON.parse(
     fs.readFileSync("../../smpl.json", "utf8")
   );
+  const [table_selected_index, setTable_selected_index] = React.useState([]);
   const [openTableModal, setOpenTableModal] = React.useState(false);
-  const handleTableModalClose = () => {
+  const handleTableModalClose = (event, reason) => {
+    if (reason && reason == "backdropClick") return;
     setOpenTableModal(false);
   };
   const renderTableSelection = () => {
@@ -56,6 +61,22 @@ export default function BasicCard() {
     const dbName = e.target.id;
     if (dbName.length === 0) return;
     setSelectedDatabase(dbName);
+  };
+  const selectTable = (e, i) => {
+    if (!(i in table_selected_index)) {
+      setTable_selected_index((init) => [...init, i]);
+    } else {
+      setTable_selected_index(
+        table_selected_index.filter((item) => item === i)
+      );
+    }
+    console.log(table_selected_index);
+  };
+  const decideSelected = (index) => {
+    if (index in table_selected_index) {
+      return true;
+    }
+    return false;
   };
   const buildDBItem = (dbName) => {
     return (
@@ -106,25 +127,31 @@ export default function BasicCard() {
     const tables = databaseTableMap[selectedDatabase];
     return (
       <List sx={{ width: "100%" }} component="nav" aria-label="mailbox folders">
-        <Divider />
+        <Divider
+          sx={{
+            paddingBottom: "4px !important"
+          }}
+        />
         {tables?.length > 0 &&
           tables.map((table, index) => (
             <>
               <LighterListItem
+                selected={decideSelected(index)}
                 id={table}
                 button
                 style={
                   index % 2
-                    ? { background: "#b2ebf2" }
-                    : { background: "#e0f7fa" }
+                    ? { background: "#e1f5fe" }
+                    : { background: "#b3e5fc" }
                 }
-                onClick={selectTable}
+                onClick={(e) => selectTable(e, index)}
               >
-                <ListItemIcon>
-                  <StorageIcon />
+                <ListItemIcon id={table}>
+                  <TableChartIcon id={table} />
                 </ListItemIcon>
-                <ListItemText>
+                <ListItemText id={table}>
                   <Typography
+                    id={table}
                     variant="h7"
                     component="div"
                     color="#0097a7"
@@ -134,7 +161,12 @@ export default function BasicCard() {
                   </Typography>
                 </ListItemText>
               </LighterListItem>
-              <Divider />
+              <Divider
+                sx={{
+                  paddingTop: "5px !important",
+                  paddingBottom: "4px !important"
+                }}
+              />
             </>
           ))}
         {tables?.length === 0 && (
@@ -314,16 +346,21 @@ export default function BasicCard() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={tableModalStyle}>
-          <Typography variant="h6" component="div" color="text.secondary">
-            Select Database
-          </Typography>
+          <div class="modal-header">
+            <Typography variant="h6" component="div" color="text.secondary">
+              Select Database
+            </Typography>
+            <IconButton onClick={handleTableModalClose}>
+              <CloseIcon />
+            </IconButton>
+          </div>
           <Grid container spacing={2} sx={{ paddingTop: "5px !important" }}>
             <Grid
               item
               xs={4}
               sx={{
                 paddingTop: "5px !important",
-                paddingRight: "4px !important"
+                paddingRight: "10px !important"
               }}
             >
               <ListDividers
@@ -332,32 +369,19 @@ export default function BasicCard() {
               />
             </Grid>
             <Divider orientation="vertical" flexItem />
-            <Grid item xs={7}>
-              {selectedDatabase?.length > 0 && <p>{renderTables()}</p>}
-              xs=4
+            <Grid
+              item
+              xs={7}
+              sx={{
+                paddingTop: "5px !important",
+                paddingRight: "4px !important"
+              }}
+            >
+              {selectedDatabase?.length > 0 && <>{renderTables()}</>}
             </Grid>
           </Grid>
         </Box>
       </Modal>
-
-      <Card sx={{ minWidth: 100 }}>
-        <CardContent>
-          <Typography variant="h5" component="div" color="text.secondary">
-            SQL Settings
-          </Typography>
-          <Typography variant="h5" component="div">
-            Pick Ingestions Points : {renderTables()}
-          </Typography>
-          <Typography sx={{ mb: 1.5 }} color="text.secondary"></Typography>
-          <Typography variant="body2">
-            well meaning and kindly.
-            <br />
-          </Typography>
-        </CardContent>
-        <CardActions>
-          <Button size="small">Learn More</Button>
-        </CardActions>
-      </Card>
     </>
   );
 }

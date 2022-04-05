@@ -38,15 +38,16 @@ export const ListItem = withStyles({
 export const LighterListItem = withStyles({
   root: {
     "&$selected": {
-      backgroundColor: "red",
-      color: "#0097a7",
+      backgroundColor: "#e0f7fa !important",
+      color: "white !important",
       "& .MuiListItemIcon-root": {
         color: "white"
-      }
+      },
+      "& .MuiListItemText-root": {}
     },
     "&$selected:hover": {
-      backgroundColor: "#00bcd4",
-      color: "white",
+      backgroundColor: "#b2ebf2 !important",
+      color: "white !important",
       "& .MuiListItemIcon-root": {
         color: "white"
       }

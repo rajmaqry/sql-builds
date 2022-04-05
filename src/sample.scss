@@ -27,3 +27,9 @@
     margin-right: calc(-0.5 * var(--bs-gutter-x));
     margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
