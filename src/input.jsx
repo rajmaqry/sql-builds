@@ -47,7 +47,7 @@ export default function CustomizedInput(props) {
     <FormControl variant="standard" sx={{ width: w }}>
       <InputLabel htmlFor="bootstrap-input">{props.label}</InputLabel>
       <BootstrapInput
-        defaultValue={props.label}
+        defaultValue={props.value}
         id="bootstrap-input"
         onChange={props.onChange}
       />

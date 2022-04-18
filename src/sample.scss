@@ -9,7 +9,9 @@
 *,*::before, *::after {
     box-sizing: border-box;
 }
-
+*{
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
 .row{
     padding: 24px;
     padding-top: 1rem !important;
@@ -29,6 +31,12 @@
 }
 
 .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -1,0 +1,389 @@
+let points: ITableMap = text;
+
+  const [table_selected, setTable_selected] = React.useState([]);
+  const [table_name_selected, setTable_name_selected] = React.useState([]);
+
+  const [table, setTable] = React.useState("");
+  const [openTableModal, setOpenTableModal] = React.useState(false);
+
+  const [selectedDatabase, setSelectedDatabase] = React.useState<string>();
+  const [databaseTableMap, setDatabaseTableMap] = React.useState<{
+    [dbName: string]: string[];
+  }>({});
+
+
+  const handleTableModalClose = (event, reason: string) => {
+    if (reason && reason == "backdropClick") return;
+    setOpenTableModal(false);
+  };
+  const renderTableSelection = () => {
+    setOpenTableModal(true);
+  };
+  
+  const handleSelectDatabase = (e) => {
+    const dbName = e.target.id;
+    if (dbName.length === 0) return;
+    setSelectedDatabase(dbName);
+  };
+  const selectTable = (e, table) => {
+    setTable(selectedDatabase + "." + table);
+  };
+  React.useEffect(() => {
+    if (!table_selected.includes(table) && table !== "") {
+      setTable_selected((init) => [...init, table]);
+      const [dbName, tableName] = table.split(".");
+      setTable_name_selected((init) => [...init, tableName]);
+    } else {
+      const [dbName, tableName] = table.split(".");
+      setTable_selected(table_selected.filter((item) => item !== table));
+      setTable_name_selected(
+        table_name_selected.filter((item) => item !== tableName)
+      );
+    }
+  }, [table]);
+  const decideSelected = (table:string) => {
+    const t = selectedDatabase + "." + table;
+    if (table_selected.includes(t)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const buildDBItem = (dbName:string) => {
+    return (
+      <>
+        <MuiListItem
+          id={dbName}
+          sx={{
+            paddingBottom: "0px !important",
+            paddingLeft: "0px !important",
+            paddingRight: "0px !important",
+            paddingTop: "0px !important"
+          }}
+        >
+          <ListItemIcon id={dbName}>
+            <StorageIcon id={dbName} />
+          </ListItemIcon>
+          <ListItemText id={dbName}>
+            <Typography
+              variant="h7"
+              component="div"
+              color="#0097a7"
+              id={dbName}
+              sx={{ width: "100%" }}
+            >
+              {dbName}
+            </Typography>
+          </ListItemText>
+        </MuiListItem>
+      </>
+    );
+  };
+  React.useEffect(() => {
+    if (!points) return;
+    const newDatabaseTableMap: { [dbName: string]: string[] } = {};
+    for (const table_key in points) {
+      const dbName = points[table_key].database_name;
+      const tableName = points[table_key].table_name;
+      if (!(dbName in newDatabaseTableMap)) {
+        newDatabaseTableMap[dbName] = [];
+        databaseListItem.push(buildDBItem(dbName));
+      }
+      newDatabaseTableMap[dbName].push(tableName);
+    }
+    setDatabaseTableMap(newDatabaseTableMap);
+  }, []);
+
+  const renderTables = () => {
+    const tables = databaseTableMap[selectedDatabase];
+    return (
+      <List sx={{ width: "100%" }} component="nav" aria-label="mailbox folders">
+        <Divider
+          sx={{
+            paddingBottom: "4px !important"
+          }}
+        />
+        {tables?.length > 0 &&
+          tables.map((table, index) => (
+            <>
+              <LighterListItem
+                selected={decideSelected(table)}
+                id={table}
+                button
+                style={
+                  index % 2
+                    ? { background: "#e1f5fe" }
+                    : { background: "#b3e5fc" }
+                }
+                onClick={(e) => selectTable(e, table)}
+              >
+                <ListItemIcon id={table}>
+                  <TableChartIcon id={table} />
+                </ListItemIcon>
+                <ListItemText id={table}>
+                  <Typography
+                    id={table}
+                    variant="h7"
+                    component="div"
+                    color="#0097a7"
+                    sx={{ width: "100%" }}
+                  >
+                    {table}
+                  </Typography>
+                </ListItemText>
+              </LighterListItem>
+              <Divider
+                sx={{
+                  paddingTop: "5px !important",
+                  paddingBottom: "4px !important"
+                }}
+              />
+            </>
+          ))}
+        {tables?.length === 0 && (
+          <>
+            <Divider />
+            <LighterListItem button>
+              <ListItemText
+                sx={{ "align-items": "center", "text-align": "center" }}
+                primary="( Empty )"
+              />
+            </LighterListItem>
+            <Divider />
+          </>
+        )}
+      </List>
+    );
+  };
+
+  const showOption = () => {
+    for (let i = 0, len = tables.length; i < len; i++) {
+      console.log(tables[i]);
+      delete remPoints[tables[i]];
+    }
+    // remTableIng.push(renderOtherTables(remTableIng));
+    console.log(remTableIng);
+  };
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          "& > :not(style)": {
+            m: 1,
+            width: 1000,
+            height: 1000
+          }
+        }}
+        justifyContent="center"
+      >
+        <Paper elevation={3}>
+          <div class="paper-heading">
+            <Typography variant="h5" component="div" color="#0097a7">
+              SQL Settings
+            </Typography>
+          </div>
+          <Divider variant="middle" />
+          <div class="paper-heading">
+            <CustomizedInput
+              label="SQL Name"
+              onChange={showOption}
+              width="100%"
+            />
+          </div>
+          <Divider variant="middle" sx={{ "padding-top": "40px" }} />
+          <div class="row">
+            <div class="row-1">
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={4}
+                  sx={{
+                    paddingTop: "1px !important",
+                    paddingRight: "4px !important"
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    color="text.secondary"
+                  >
+                    Tables{" "}
+                  </Typography>
+                  <ListDividers items={table_name_selected} />
+                  <Button variant="contained" onClick={renderTableSelection}>
+                    + Add Table
+                  </Button>
+                </Grid>
+
+                <Divider orientation="vertical" flexItem />
+                <Grid item xs={6}>
+                  xs=4
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        </Paper>
+      </Box>
+
+      <Modal
+        open={openTableModal}
+        onClose={handleTableModalClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={tableModalStyle}>
+          <div class="modal-header">
+            <Typography variant="h6" component="div" color="text.secondary">
+              Select Database
+            </Typography>
+            <IconButton onClick={handleTableModalClose}>
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <Grid container spacing={2} sx={{ paddingTop: "5px !important" }}>
+            <Grid
+              item
+              xs={4}
+              sx={{
+                paddingTop: "5px !important",
+                paddingRight: "10px !important"
+              }}
+            >
+              <ListDividers
+                items={databaseListItem}
+                onClick={handleSelectDatabase}
+              />
+            </Grid>
+            <Divider orientation="vertical" flexItem />
+            <Grid
+              item
+              xs={7}
+              sx={{
+                paddingTop: "5px !important",
+                paddingRight: "4px !important"
+              }}
+            >
+              {selectedDatabase?.length > 0 && <>{renderTables()}</>}
+            </Grid>
+          </Grid>
+        </Box>
+      </Modal>
+    </>
+  );
+
+  <DataTableLibrary
+  open={openTableModal}
+  onClose={()=>setOpenTableModal(false)}
+  /**(event, reason) => handleTableModalClose(event, reason) */
+  onChange={onTableChange}
+  onTableClick={onTableClick}
+/>
+
+const handleTableModalClose = (event, reason: string) => {
+  if (reason && reason == "backdropClick") return;
+  setOpenTableModal(false);
+}
+const [openTableModal, setOpenTableModal] = React.useState<boolean>(false)
+
+
+<>
+<p>{table_key}</p>
+<LighterListItem
+    selected={selectedTables.has(table_key)}
+    id={table_key}
+    button
+    style={
+        index % 2
+            ? { background: "#e1f5fe" }
+            : { background: "#b3e5fc" }
+    }
+    onClick={(e) => select_table(e, selectedTables, table_key)}
+>
+    <ListItemIcon id={table_key}>
+        <TableChartIcon id={table_key} />
+    </ListItemIcon>
+    <ListItemText id={table_key}>
+        <Typography
+            id={table_key}
+            variant="h7"
+            component="div"
+            color="#0097a7"
+            sx={{ width: "100%" }}
+        >
+            {table_key.split('.')[1]}
+        </Typography>
+    </ListItemText>
+</LighterListItem>
+<Divider
+    sx={{
+        paddingTop: "5px !important",
+        paddingBottom: "4px !important"
+    }}
+/>
+</>
+
+
+const render_table_names_selected_1 = () => {
+  if (!props.value.tables || props.value.tables.length === 0) {
+      return [];
+  } else {
+      const table_names: any[] = []
+      props.value.tables.map((table_key, i) => {
+          const { tableName, tableKey } = getInfoFromTableKey(table_key)
+          table_names.push(
+              <>
+                  <ListItemIcon id={tableKey} sx={{ "min-width": "40px" }}>
+                      <TableChartIcon id={tableKey} />
+                  </ListItemIcon>
+                  <ListItemText id={tableKey}>
+                      <Typography
+                          id={tableKey}
+                          variant="button"
+                          component="div"
+                          color="black"
+                          sx={{ width: "100%" }}
+                      >
+                          {tableName}
+                      </Typography>
+                  </ListItemText>
+                  <IconButton onClick={() => remove_table(tableKey, i)}>
+                      <CloseIcon />
+                  </IconButton>
+              </>)
+      });
+      return table_names;
+  }
+}
+
+<Grid container spacing={2} sx={{ paddingTop: "5px !important" }}>
+                    <Grid
+                        item
+                        xs={4}
+                        sx={{
+                            paddingTop: "5px !important",
+                            paddingRight: "10px !important"
+                        }}
+                    >
+                        <ListDividers
+                            items={dbLists}
+                            onClick={(e) => select_database(e)}
+                        />
+                    </Grid>
+                    <Divider orientation="vertical" flexItem />
+                    <Grid
+                        item
+                        xs={7}
+                        sx={{
+                            paddingTop: "5px !important",
+                            paddingRight: "4px !important"
+                        }}
+                    >
+                        {selectedDatabase?.length > 0 && <>{render_tables()}</>}
+                    </Grid>
+                </Grid>
+
+
+
+<Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
